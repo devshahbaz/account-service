@@ -7,7 +7,7 @@ services:
 
 
 before_install:
-   - docker build -t 001993/lara-dock -f ./web/Dockerfile ./web
+   - docker build -t 001993/lara-dock -f ./web
 
 script:
   - docker run -e CI=true 001993/lara-dock php artisan test

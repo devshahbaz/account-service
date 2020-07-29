@@ -1,40 +1,83 @@
-FROM php:7.4-fpm
+# FROM php:7.4-fpm
 
 
-# Set working directory
+# # Set working directory
+# WORKDIR /var/www
+
+# # Arguments defined in docker-compose.yml
+# ARG USER
+# ARG UID
+
+# # Install system dependencies
+# RUN apt-get update && apt-get install -y \
+#     git \
+#     curl \
+#     libpng-dev \
+#     libonig-dev \
+#     libxml2-dev \
+#     zip \
+#     unzip
+
+# # Clear cache
+# RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# # Install PHP extensions
+# RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+# # Get latest Composer
+# COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# # # Create system user to run Composer and Artisan Commands
+# # RUN useradd -G www-data,root -u 1000 -d /home/sammy sammy
+# # RUN mkdir -p /home/sammy/.composer && \
+# #     chown -R sammy:sammy /home/sammy
+
+
+# RUN addgroup -g 999 -S www && \
+#     adduser -u 999 -S www -G www
+
+# USER www
+
+# COPY --chown=www:www . /var/www
+
+# COPY . .
+# RUN composer install
+
+
+# # USER $user
+
+
+FROM php:7.3-fpm-alpine
+
 WORKDIR /var/www
 
-# Arguments defined in docker-compose.yml
-ARG USER
-ARG UID
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apk update && apk add \
+    build-base \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libzip-dev \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
     git \
     curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip
+    && curl -sS https://getcomposer.org/installer | php \
+    && chmod +x composer.phar && mv composer.phar /usr/local/bin/composer
+    
+RUN docker-php-ext-install pdo_mysql zip exif pcntl
+RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include --with-png-dir=/usr/include
+RUN docker-php-ext-install gd
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# install redis
+RUN apk add autoconf && pecl install -o -f redis \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable redis && apk del autoconf
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+COPY ./config/php/local.ini /usr/local/etc/php/conf.d/local.ini
 
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# # Create system user to run Composer and Artisan Commands
-# RUN useradd -G www-data,root -u 1000 -d /home/sammy sammy
-# RUN mkdir -p /home/sammy/.composer && \
-#     chown -R sammy:sammy /home/sammy
-
-
-RUN addgroup -g 999 -S www && \
-    adduser -u 999 -S www -G www
+RUN addgroup -g 1000 -S www && \
+    adduser -u 1000 -S www -G www
 
 USER www
 
@@ -43,5 +86,4 @@ COPY --chown=www:www . /var/www
 COPY . .
 RUN composer install
 
-
-# USER $user
+EXPOSE 9000

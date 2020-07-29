@@ -32,12 +32,9 @@ RUN mkdir -p /home/sammy/.composer && \
 WORKDIR /var/www
 
 COPY . .
-
-USER sammy
-
 RUN composer install
 
-
+USER sammy
 
 
 # USER $user

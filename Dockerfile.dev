@@ -34,7 +34,7 @@ RUN mkdir -p /home/sammy/.composer && \
 USER sammy
 
 COPY . .
-RUN composer install
+RUN sudo composer install
 
 
 

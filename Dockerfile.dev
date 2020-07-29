@@ -33,8 +33,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 #     chown -R sammy:sammy /home/sammy
 
 
-RUN addgroup -g 1000 -S www && \
-    adduser -u 1000 -S www -G www
+RUN addgroup -g 999 -S www && \
+    adduser -u 999 -S www -G www
 
 USER www
 

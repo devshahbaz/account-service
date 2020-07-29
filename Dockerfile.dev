@@ -28,16 +28,16 @@ RUN useradd -G www-data,root -u 1000 -d /home/sammy sammy
 RUN mkdir -p /home/sammy/.composer && \
     chown -R sammy:sammy /home/sammy
 
-
-
 # Set working directory
 WORKDIR /var/www
 
-
-
 COPY . .
-RUN composer install
 
 USER sammy
+
+RUN composer install
+
+
+
 
 # USER $user

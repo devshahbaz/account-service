@@ -7,16 +7,16 @@ services:
 
 
 before_install:
-   - docker build -t 001993/lara-dock -f ./web/Dockerfile ./web
+   - docker build -t 001993/laravel-docker -f ./web/Dockerfile ./web
 
 script:
-  - docker run -e CI=true 001993/lara-dock php artisan test
+  - docker run -e CI=true 001993/laravel-docker php artisan test
 
 after_success:
   # Login to docker CI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Push build image to docker
-  - docker push 001993/lara-dock
+  - docker push 001993/laravel-docker
 
 # Deploy to AWS 
 deploy:

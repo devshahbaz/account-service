@@ -3,7 +3,7 @@
     "containerDefinitions": [
       {
         "name": "app",
-        "image": "001993/lara-dock",
+        "image": "001993/laravel-docker",
         "hostname": "app",
         "essential": false,
         "memory": 128

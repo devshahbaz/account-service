@@ -33,11 +33,11 @@ RUN mkdir -p /home/sammy/.composer && \
 # Set working directory
 WORKDIR /var/www
 
-USER sammy
+
 
 COPY . .
 RUN composer install
 
-
+USER sammy
 
 # USER $user

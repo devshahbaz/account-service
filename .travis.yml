@@ -7,7 +7,7 @@ services:
 
 
 before_install:
-   - docker build -t 001993/laravel-docker -f ./web/Dockerfile ./web
+   - docker build -t 001993/laravel-docker .
 
 script:
   - docker run -e CI=true 001993/laravel-docker php artisan test

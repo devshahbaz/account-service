@@ -8,7 +8,7 @@ services:
         user: sammy
         uid: 1000
       dockerfile: Dockerfile
-      context: ./web
+      context: .
     image: 001993/laravel-docker
     container_name: app
     restart: unless-stopped
@@ -20,8 +20,8 @@ services:
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-       - ./web:/var/www
-       - ./web/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+       - ./:/var/www
+       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
 
@@ -34,8 +34,8 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./web:/var/www
-      - ./web/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
     networks:
       - app-network
 

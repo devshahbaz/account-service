@@ -34,5 +34,6 @@ WORKDIR /var/www
 COPY ./composer.json ./composer.lock .env ./
 RUN composer install
 COPY . .
+RUN composer dump-autoload
 
 # USER $user

@@ -1,0 +1,60 @@
+version: "3"
+services:
+  
+  # PHP service
+  app:
+    build:
+      args:
+        user: sammy
+        uid: 1000
+      dockerfile: Dockerfile
+      context: ./web
+    image: 001993/laravel-docker
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: secret
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+       - ./web:/var/www
+       - ./web/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8000:80"
+    volumes:
+      - ./web:/var/www
+      - ./web/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  #MySQL Service
+  database:
+    image: mysql:5.7.22
+    container_name: db
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - dbdata:/var/lib/mysql
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge    

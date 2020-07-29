@@ -31,7 +31,7 @@ RUN mkdir -p /home/sammy/.composer && \
 # Set working directory
 WORKDIR /var/www
 
-USER $USER
+USER sammy
 
 COPY ./composer.json ./composer.lock .env ./
 RUN composer install

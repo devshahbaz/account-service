@@ -30,7 +30,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN useradd -G www-data,root -u ${UID} -d /home/${USER} ${USER}
 RUN mkdir -p /home/${USER}/.composer && \
     chown -R ${USER}:${USER} /home/${USER}  && \
-    chown -RW ${USER}:${USER} /var/www
+    chown -R ${USER}:${USER} /var/www
 
 
 USER ${USER}

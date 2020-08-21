@@ -31,4 +31,10 @@ RUN mkdir -p /home/$USER/.composer && \
 # Set working directory
 WORKDIR /var/www
 
+# COPY --chown=$USER:$USER composer.json composer.lock ./
+# COPY --chown=$USER:$USER ./database .
+# RUN composer install
+
 USER $USER
+
+COPY . .

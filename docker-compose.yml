@@ -5,7 +5,7 @@ services:
   app:
     build:
       args:
-        USER: www
+        USER: sammy
         UID: 1000
       dockerfile: Dockerfile
       context: .
@@ -15,12 +15,13 @@ services:
     tty: true
     environment:
       DB_HOST: db
+      DB_DATABASE: laravel
       DB_PASSWORD: secret
       SERVICE_NAME: app
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-       - /var/www/vendor
+      #  - /var/www/vendor
        - ./:/var/www
        - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
@@ -36,7 +37,7 @@ services:
       - "8000:80"
     volumes:
       - ./:/var/www
-      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./config/nginx/conf.d/:/etc/nginx/conf.d/
     networks:
       - app-network
 
@@ -44,11 +45,17 @@ services:
   database:
     image: mysql:5.7.22
     container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3307:3306"
     environment:
       MYSQL_DATABASE: laravel
       MYSQL_ROOT_PASSWORD: secret
     volumes:
       - dbdata:/var/lib/mysql
+    networks:
+      - app-network
 
 #Volumes
 volumes:
